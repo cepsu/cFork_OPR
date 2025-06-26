@@ -1,0 +1,232 @@
+:root {
+  /* Theme colors */
+  --bg: #1e1e1e;
+  --surface: #2e2e2e;
+  --border: #3a3f44;
+  --text: #e1e1e1;
+  --subtext: #c2c2c2;
+  --accent: #289dda;
+  /* Tab Console Variables */
+  --tabs-full-height: 56px;
+  --tabs-handle-height: 15px;
+  --tabs-slide-amount: calc(
+    var(--tabs-handle-height) - var(--tabs-full-height)
+  );
+  --combat-log-slide-amount: 18.5em;
+}
+
+/* Base reset */
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+h2,
+h3 {
+  margin: 1rem 0 0.5rem;
+  color: var(--text);
+}
+
+button {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.2s ease;
+  max-width: 200px; /* Increased max-width */
+}
+button:hover {
+  background-color: #217cb5;
+}
+button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1rem 0;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  box-sizing: border-box;
+  background-color: var(--bg);
+  border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+  height: var(--tabs-full-height);
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease-in-out, margin-bottom 0.3s ease-in-out;
+  position: relative;
+  z-index: 10;
+}
+
+body.game-tab-active .tabs {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1050;
+  transform: translateY(var(--tabs-slide-amount));
+  cursor: pointer;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+body.game-tab-active .tabs:hover {
+  transform: translateY(0);
+}
+
+body.game-tab-active .main-container {
+  padding-top: calc(1rem + var(--tabs-handle-height));
+}
+
+.main-container {
+  padding-top: calc(1rem + var(--tabs-full-height));
+}
+
+.tab-content {
+  display: none;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+.tab-content.active {
+  display: flex;
+}
+
+#gameCanvas {
+  display: block;
+  aspect-ratio: 3 / 2;
+  max-width: 100%;
+  max-height: 100%;
+  border: 1px solid #444;
+  background: #aaa;
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-height: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#unit-tooltip {
+  position: absolute;
+  display: none;
+  background-color: rgba(46, 46, 46, 0.9);
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+  pointer-events: none;
+  font-size: 0.9em;
+  max-width: 300px;
+}
+#unit-tooltip h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+  color: var(--accent);
+}
+#unit-tooltip h5 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-size: 1em;
+}
+#unit-tooltip p {
+  margin: 4px 0;
+}
+#unit-tooltip ul {
+  margin: 5px 0 5px 20px;
+  padding-left: 0;
+}
+#unit-tooltip li {
+  margin-bottom: 3px;
+}
+
+#aiButtonContainer {
+  flex-shrink: 0;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+#combat-log-container {
+  flex-shrink: 0;
+  width: 100%;
+  line-height: 1.4;
+  max-height: 20em;
+  height: 20em;
+  background-color: #333;
+  border: 1px solid #555;
+  padding: 5px;
+  overflow-y: hidden;
+  font-size: 1em;
+  font-family: monospace;
+  color: #ccc;
+  box-sizing: border-box;
+  margin-top: 15px;
+  opacity: 0.9;
+}
+
+body.game-tab-active #combat-log-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1050;
+  transform: translateY(var(--combat-log-slide-amount));
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+body.game-tab-active #combat-log-container:hover {
+  transform: translateY(0);
+  overflow-y: scroll;
+}
+#combat-log {
+  white-space: pre-wrap;
+}
+
+textarea.armybook {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 0.75rem;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.9rem;
+  width: 100%;
+  resize: vertical;
+  display: block;
+  box-sizing: border-box;
+  line-height: 1.2em;
+  height: 33vh;
+  overflow-y: auto;
+  resize: none;
+}
